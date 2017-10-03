@@ -21,7 +21,7 @@ class VKontakte extends OAuth2Scheme {
   constructor (Config) {
     const config = Config.get('services.ally.vk')
 
-    utils.validateDriverConfig('vkontakte', config, ['clientId', 'clientSecret', 'redirectUri'])
+    utils.validateDriverConfig('vk', config, ['clientId', 'clientSecret', 'redirectUri'])
 
     super(config.clientId, config.clientSecret, config.headers)
 

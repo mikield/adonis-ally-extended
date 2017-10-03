@@ -1,6 +1,6 @@
 {
   "name": "@mikield/adonis-ally-extended",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "description": "Additional Services for AdonisJS Ally package",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
