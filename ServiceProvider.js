@@ -13,7 +13,7 @@ const { ServiceProvider } = require('@adonisjs/fold')
 const _ = require('lodash')
 
 const Drivers = {
-  vk: require('./Vk')
+  vk: require('./Drivers/Vk')
 }
 
 class AllyServiceProvider extends ServiceProvider {
