@@ -1,6 +1,6 @@
 {
   "name": "@mikield/adonis-ally-extended",
-  "version": "0.4.6",
+  "version": "0.5.1",
   "description": "Additional Services for AdonisJS Ally package",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,5 +10,9 @@
     "ally"
   ],
   "author": "Vladyslav Gaysyuk <mikield@icloud.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@adonisjs/ally": "^2.0.1",
+    "@adonisjs/fold": "^4.0.4"
+  }
 }

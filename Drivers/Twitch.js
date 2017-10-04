@@ -1,9 +1,9 @@
 'use strict'
 
 /*
- * adonis-ally vkontakte driver
+ * adonis-ally twitch driver
  *
- * (c) Oleg Kovalev <oleg.kovalev@webartisan.ru>
+ * (c) Vladyslav Gaysyuk <mikield@icloud.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -16,12 +16,12 @@ const got = require('got')
 const utils = require('@adonisjs/ally/lib/utils')
 const _ = require('lodash')
 
-class VKontakte extends OAuth2Scheme {
+class Twitch extends OAuth2Scheme {
 
   constructor (Config) {
-    const config = Config.get('services.ally.vk')
+    const config = Config.get('services.ally.twitch')
 
-    utils.validateDriverConfig('vk', config, ['clientId', 'clientSecret', 'redirectUri'])
+    utils.validateDriverConfig('twitch', config, ['clientId', 'clientSecret', 'redirectUri'])
 
     super(config.clientId, config.clientSecret, config.headers)
 
@@ -30,12 +30,10 @@ class VKontakte extends OAuth2Scheme {
      * url or fetching user profile.
      */
     this._scope = this._getInitialScopes(config.scope)
-    this._fields = this._getInitialFields(config.fields)
-    this._api_version = this._getInitialFields(config.api_version) || '5.65'
+    this._api_version = config.api_version || 'v5'
     this._redirectUri = config.redirectUri
-    this._redirectUriOptions = _.merge({
-      response_type: 'code'
-    }, config.options)
+    this.config = config
+    this._redirectUriOptions = _.merge({response_type: 'code'}, config.options)
   }
 
   /**
@@ -64,7 +62,7 @@ class VKontakte extends OAuth2Scheme {
    * @return {String}
    */
   get baseUrl () {
-    return 'https://oauth.vk.com'
+    return 'https://api.twitch.tv/kraken'
   }
 
   /**
@@ -74,7 +72,7 @@ class VKontakte extends OAuth2Scheme {
    * @return {String} [description]
    */
   get authorizeUrl () {
-    return 'authorize'
+    return '/oauth2/authorize'
   }
 
   /**
@@ -84,7 +82,7 @@ class VKontakte extends OAuth2Scheme {
    * @return {String}
    */
   get accessTokenUrl () {
-    return 'access_token'
+    return '/oauth2/token'
   }
 
   /**
@@ -93,7 +91,7 @@ class VKontakte extends OAuth2Scheme {
    * @return {String}
    */
   get apiUrl () {
-    return 'https://api.vk.com/method'
+    return 'https://api.twitch.tv/kraken'
   }
 
   /**
@@ -108,22 +106,7 @@ class VKontakte extends OAuth2Scheme {
    * @private
    */
   _getInitialScopes (scopes) {
-    return _.size(scopes) ? scopes : ['email']
-  }
-
-  /**
-   * Returns the initial fields to be used right from the
-   * config file. Otherwise it will fallback to the
-   * commonly used fields.
-   *
-   * @param   {Array} fields
-   *
-   * @return  {Array}
-   *
-   * @private
-   */
-  _getInitialFields (fields) {
-    return _.size(fields) ? fields : ['uid', 'first_name', 'screen_name', 'last_name', 'has_photo', 'photo', 'city']
+    return _.size(scopes) ? scopes : ['user_read']
   }
 
   /**
@@ -138,11 +121,11 @@ class VKontakte extends OAuth2Scheme {
    * @private
    */
   async _getUserProfile (accessToken, fields) {
-    fields = _.size(fields) ? fields : this._fields
-    const profileUrl = `${this.apiUrl}/users.get?access_token=${accessToken}&fields=${fields.join(',')}&https=1&v=${this._api_version}`
-    const response = await got(profileUrl, {
+    const response = await got(`${this.apiUrl}/user`, {
       headers: {
-        'Accept': 'application/json'
+        'Authorization': accessToken?'OAuth ' + accessToken : undefined,
+        'Accept': `Accept: application/vnd.twitchtv.${this._api_version}+json`,
+        'Client-ID': this.config.clientId
       },
       json: true
     })
@@ -171,7 +154,7 @@ class VKontakte extends OAuth2Scheme {
    */
   parseProviderError (error) {
     const parsedError = _.isString(error.data) ? JSON.parse(error.data) : null
-    const message = _.get(parsedError, 'error.message', error)
+    const message = _.get(parsedError, 'message', error)
     return CE.OAuthException.tokenExchangeException(message, error.statusCode, parsedError)
   }
 
@@ -207,21 +190,20 @@ class VKontakte extends OAuth2Scheme {
       const errorMessage = this.parseRedirectError(queryParams)
       throw CE.OAuthException.tokenExchangeException(errorMessage, null, errorMessage)
     }
-
     const accessTokenResponse = await this.getAccessToken(code, this._redirectUri, {
       grant_type: 'authorization_code'
     })
     const userProfile = await this._getUserProfile(accessTokenResponse.accessToken, fields)
+
     const user = new AllyUser()
-    const avatarUrl = userProfile.response[0].photo
     user
       .setOriginal(userProfile)
       .setFields(
-        userProfile.response[0].id,
-        `${userProfile.response[0].first_name} ${userProfile.response[0].last_name}`,
-        accessTokenResponse.result.email,
-        userProfile.response[0].screen_name,
-        avatarUrl
+        userProfile._id,
+        userProfile.display_name,
+        userProfile.email,
+        userProfile.name,
+        userProfile.logo
       )
       .setToken(
         accessTokenResponse.accessToken,
@@ -234,4 +216,4 @@ class VKontakte extends OAuth2Scheme {
   }
 }
 
-module.exports = VKontakte
+module.exports = Twitch
