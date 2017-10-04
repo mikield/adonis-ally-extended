@@ -60,7 +60,24 @@ mixer: {
 ...
 ```
 
-That's all!
+By default all drivers are not registered, as many of them you will not use, you shall `use` needed to your project
+
+Open `start/hooks.js` and `use` the drivers by names.
+#### Registering the driver should be in `providersRegistered` hook.
+
+Awaiable drivers are:
+* twitch //twtich.tv
+* mixer //mixer.com
+* vk //vk.com
+
+#### Example:
+```js
+hooks.after.providersRegistered(() => {
+  const AllyExtended = use('@mikield/ally-extended')
+  AllyExtended.use('twitch').use('mixer').use('vk')
+})
+```
+
 
 ## Usage
 

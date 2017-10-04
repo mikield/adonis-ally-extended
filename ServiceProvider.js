@@ -19,6 +19,7 @@ const Drivers = {
 }
 
 class AllyServiceProvider extends ServiceProvider {
+
   /**
   * The register method called by ioc container
   * as a life-cycle method
@@ -27,14 +28,34 @@ class AllyServiceProvider extends ServiceProvider {
   *
   * @return {void}
   */
-  boot () {
-    _.forEach(Drivers, (implementation, name) => {
+  register () {
+    this.app.singleton('@mikield/ally-extended', (app) => {
+      class DriverActivator{
+        constructor(){
+            this.UDriver = {}
+        }
+
+        use(name){
+          if(_.has(Drivers, name)){
+            this.UDriver[name] = Drivers[name]
+          }
+          return this
+        }
+      }
+      return new DriverActivator
+    })
+  }
+
+  boot(){
+    const AllyExtended = use('@mikield/ally-extended')
+    _.forEach(AllyExtended.UDriver, (implementation, name) => {
       this.app.extend('Adonis/Addons/Ally', name, () => {
         return this.app.make(implementation)
       })
     })
-
   }
+
+
 }
 
 module.exports = AllyServiceProvider

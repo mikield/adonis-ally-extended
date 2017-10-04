@@ -52,7 +52,7 @@ class Twitch extends OAuth2Scheme {
    * @return {String}
    */
   get scopeSeperator () {
-    return ','
+    return ' '
   }
 
   /**
