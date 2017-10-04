@@ -29,6 +29,21 @@ vk: {
   clientId: Env.get('VK_CLIENT_ID'),
   clientSecret: Env.get('VK_CLIENT_SECRET'),
   redirectUri: `${Env.get('APP_URL')}/authenticated/vk`
+},
+
+/*
+ |--------------------------------------------------------------------------
+ | Twitch Configuration
+ |--------------------------------------------------------------------------
+ |
+ | You can access your application credentials from the twitch developers
+ | dashboard. https://dev.twitch.tv/dashboard
+ |
+ */
+twitch: {
+  clientId: Env.get('TWITCH_CLIENT_ID'),
+  clientSecret: Env.get('TWITCH_CLIENT_SECRET'),
+  redirectUri: `${Env.get('APP_URL')}/authenticated/twitch`
 }
 ...
 ```
@@ -40,12 +55,14 @@ That's all!
 Now you can access, the `ally` object on each HTTP request
 
 ```js
-Route.get('vk', async ({ ally }) => {
-  await ally.driver('vk').redirect()
+Route.get('/:service', async ({ request, ally }) => {
+  let {service} = await request.all()
+  await ally.driver(service).redirect()
 })
 
-Route.get('authenticated/vk', async ({ ally }) => {
-  const user = await ally.driver('vk').getUser()
+Route.get('authenticated/:service', async ({ request, ally }) => {
+  let {service} = await request.all()
+  const user = await ally.driver(service).getUser()
 
   return user
 })
