@@ -59,7 +59,7 @@ class VKontakte extends OAuth2Scheme {
 
   /**
    * Base url to be used for constructing
-   * facebook oauth urls.
+   * vk oauth urls.
    *
    * @return {String}
    */
@@ -176,7 +176,7 @@ class VKontakte extends OAuth2Scheme {
   }
 
   /**
-   * Parses the redirect errors returned by facebook
+   * Parses the redirect errors returned by vk
    * and returns the error message.
    *
    * @param  {Object} queryParams

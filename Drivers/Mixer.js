@@ -1,7 +1,7 @@
 'use strict'
 
 /*
- * adonis-ally twitch driver
+ * adonis-ally Mixer driver
  *
  * (c) Vladyslav Gaysyuk <mikield@icloud.com>
  *
@@ -16,12 +16,12 @@ const got = require('got')
 const utils = require('@adonisjs/ally/lib/utils')
 const _ = require('lodash')
 
-class Twitch extends OAuth2Scheme {
+class Mixer extends OAuth2Scheme {
 
   constructor (Config) {
-    const config = Config.get('services.ally.twitch')
+    const config = Config.get('services.ally.mixer')
 
-    utils.validateDriverConfig('twitch', config, ['clientId', 'clientSecret', 'redirectUri'])
+    utils.validateDriverConfig('mixer', config, ['clientId', 'clientSecret', 'redirectUri'])
 
     super(config.clientId, config.clientSecret, config.headers)
 
@@ -30,7 +30,6 @@ class Twitch extends OAuth2Scheme {
      * url or fetching user profile.
      */
     this._scope = this._getInitialScopes(config.scope)
-    this._api_version = config.api_version || 'v5'
     this._redirectUri = config.redirectUri
     this.config = config
     this._redirectUriOptions = _.merge({response_type: 'code'}, config.options)
@@ -52,17 +51,17 @@ class Twitch extends OAuth2Scheme {
    * @return {String}
    */
   get scopeSeperator () {
-    return ','
+    return ' '
   }
 
   /**
    * Base url to be used for constructing
-   * twitch oauth urls.
+   * mixer oauth urls.
    *
    * @return {String}
    */
   get baseUrl () {
-    return 'https://api.twitch.tv/kraken'
+    return 'https://mixer.com'
   }
 
   /**
@@ -72,7 +71,7 @@ class Twitch extends OAuth2Scheme {
    * @return {String} [description]
    */
   get authorizeUrl () {
-    return '/oauth2/authorize'
+    return 'oauth/authorize'
   }
 
   /**
@@ -82,7 +81,7 @@ class Twitch extends OAuth2Scheme {
    * @return {String}
    */
   get accessTokenUrl () {
-    return '/oauth2/token'
+    return `api/v1/oauth/token`
   }
 
   /**
@@ -91,7 +90,7 @@ class Twitch extends OAuth2Scheme {
    * @return {String}
    */
   get apiUrl () {
-    return 'https://api.twitch.tv/kraken'
+    return 'https://mixer.com/api/v1'
   }
 
   /**
@@ -106,7 +105,7 @@ class Twitch extends OAuth2Scheme {
    * @private
    */
   _getInitialScopes (scopes) {
-    return _.size(scopes) ? scopes : ['user_read']
+    return _.size(scopes) ? scopes : ["user:details:self"]
   }
 
   /**
@@ -121,11 +120,9 @@ class Twitch extends OAuth2Scheme {
    * @private
    */
   async _getUserProfile (accessToken, fields) {
-    const response = await got(`${this.apiUrl}/user`, {
+    const response = await got(`${this.apiUrl}/users/current`, {
       headers: {
-        'Authorization': accessToken?'OAuth ' + accessToken : undefined,
-        'Accept': `Accept: application/vnd.twitchtv.${this._api_version}+json`,
-        'Client-ID': this.config.clientId
+        'Authorization': accessToken?'Bearer ' + accessToken : undefined
       },
       json: true
     })
@@ -153,13 +150,14 @@ class Twitch extends OAuth2Scheme {
    * @return {Error}
    */
   parseProviderError (error) {
+    console.log(error)
     const parsedError = _.isString(error.data) ? JSON.parse(error.data) : null
     const message = _.get(parsedError, 'message', error)
     return CE.OAuthException.tokenExchangeException(message, error.statusCode, parsedError)
   }
 
   /**
-   * Parses the redirect errors returned by twitch
+   * Parses the redirect errors returned by mixer
    * and returns the error message.
    *
    * @param  {Object} queryParams
@@ -181,7 +179,6 @@ class Twitch extends OAuth2Scheme {
    */
   async getUser (queryParams, fields) {
     const code = queryParams.code
-
     /**
      * Throw an exception when query string does not have
      * code.
@@ -199,11 +196,11 @@ class Twitch extends OAuth2Scheme {
     user
       .setOriginal(userProfile)
       .setFields(
-        userProfile._id,
-        userProfile.display_name,
+        userProfile.id,
+        userProfile.username,
         userProfile.email,
-        userProfile.name,
-        userProfile.logo
+        null,
+        userProfile.avatarUrl
       )
       .setToken(
         accessTokenResponse.accessToken,
@@ -216,4 +213,4 @@ class Twitch extends OAuth2Scheme {
   }
 }
 
-module.exports = Twitch
+module.exports = Mixer

@@ -44,6 +44,21 @@ twitch: {
   clientId: Env.get('TWITCH_CLIENT_ID'),
   clientSecret: Env.get('TWITCH_CLIENT_SECRET'),
   redirectUri: `${Env.get('APP_URL')}/authenticated/twitch`
+},
+
+/*
+ |--------------------------------------------------------------------------
+ | Mixer Configuration
+ |--------------------------------------------------------------------------
+ |
+ | You can access your application credentials from the Mixer developers
+ | lab. https://mixer.com/lab/oauth
+ |
+ */
+mixer: {
+  clientId: Env.get('MIXER_CLIENT_ID'),
+  clientSecret: Env.get('MIXER_CLIENT_SECRET'),
+  redirectUri: `${Env.get('APP_URL')}/authenticated/mixer`
 }
 ...
 ```
