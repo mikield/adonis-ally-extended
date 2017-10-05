@@ -217,7 +217,7 @@ class VKontakte extends OAuth2Scheme {
     user
       .setOriginal(userProfile)
       .setFields(
-        userProfile.response[0].id,
+        accessTokenResponse.result.user_id,
         `${userProfile.response[0].first_name} ${userProfile.response[0].last_name}`,
         accessTokenResponse.result.email,
         userProfile.response[0].screen_name,
