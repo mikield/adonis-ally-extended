@@ -1,16 +1,28 @@
 {
   "name": "@mikield/adonis-ally-extended",
-  "version": "0.6.6",
+  "version": "0.6.7",
   "description": "Additional Services for AdonisJS Ally package",
+  "author": "Vladyslav Gaysyuk <mikield@icloud.com>",
+  "license": "MIT",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "adonisjs",
-    "ally"
+    "ally",
+    "oauth2",
+    "vk",
+    "mixer",
+    "twitch"
   ],
-  "author": "Vladyslav Gaysyuk <mikield@icloud.com>",
-  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikield/adonis-ally-extended.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mikield/adonis-ally-extended/issues"
+  },
+  "homepage": "https://github.com/mikield/adonis-ally-extended#readme",
   "devDependencies": {
     "@adonisjs/ally": "^2.0.1",
     "@adonisjs/fold": "^4.0.4"
