@@ -1,5 +1,12 @@
-# adonis-ally-extended
-Additional Services for AdonisJS Ally package
+# AdonisJS Ally Extended
+This package gives you additional social services to auth your users.
+
+Any of service that accepts OAuth can be added. If you want an additional service - please create a issue and I will take my time to add it.
+
+Avaiable services for now are:
+* Twitch.tv
+* Mixer.com
+* Vk.com
 
 
 ## Registering provider
@@ -69,10 +76,6 @@ By default all drivers are not registered, as many of them you will not use, you
 Open `start/hooks.js` and `use` the drivers by names.
 #### Registering the driver should be in `providersRegistered` hook.
 
-Awaiable drivers are:
-* twitch //twtich.tv
-* mixer //mixer.com
-* vk //vk.com
 
 #### Example:
 ```js
