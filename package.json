@@ -1,8 +1,8 @@
 {
   "name": "@mikield/adonis-ally-extended",
-  "version": "0.6.7",
+  "version": "0.7.1",
   "description": "Additional Services for AdonisJS Ally package",
-  "author": "Vladyslav Gaysyuk <mikield@icloud.com>",
+  "author": "Vladyslav Gaysyuk <hello@mikield.rocks>",
   "license": "MIT",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/mikield/adonis-ally-extended#readme",
   "devDependencies": {
-    "@adonisjs/ally": "^2.0.1",
-    "@adonisjs/fold": "^4.0.4"
+    "@adonisjs/ally": "^2.1.3",
+    "@adonisjs/fold": "^4.0.9"
   }
 }
