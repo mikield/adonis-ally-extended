@@ -56,6 +56,21 @@ mixer: {
   clientId: Env.get('MIXER_CLIENT_ID'),
   clientSecret: Env.get('MIXER_CLIENT_SECRET'),
   redirectUri: `${Env.get('APP_URL')}/authenticated/mixer`
+},
+
+/*
+ |--------------------------------------------------------------------------
+ | Mixer Configuration
+ |--------------------------------------------------------------------------
+ |
+ | You can access your application credentials from the Patreon developers
+ | lab. https://www.patreon.com/developers
+ |
+ */
+patreon: {
+  clientId: Env.get('MIXER_CLIENT_ID'),
+  clientSecret: Env.get('MIXER_CLIENT_SECRET'),
+  redirectUri: `${Env.get('APP_URL')}/authenticated/mixer`
 }
 ...
 ```

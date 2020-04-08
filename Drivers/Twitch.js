@@ -3,7 +3,7 @@
 /*
  * adonis-ally twitch driver
  *
- * (c) Vladyslav Gaysyuk <mikield@icloud.com>
+ * (c) Vladyslav Gaysyuk <hello@mikield.rocks>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.

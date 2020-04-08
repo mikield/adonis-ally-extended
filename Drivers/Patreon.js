@@ -1,9 +1,9 @@
 'use strict'
 
 /*
- * adonis-ally Mixer driver
+ * adonis-ally Patreon driver
  *
- * (c) Vladyslav Gaysyuk <hello@mikield.rocks>
+ * (c) Jonas Fleur-Aime <hi@underlinelabs.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -16,12 +16,12 @@ const got = require('got')
 const utils = require('@adonisjs/ally/lib/utils')
 const _ = require('lodash')
 
-class Mixer extends OAuth2Scheme {
+class Patreon extends OAuth2Scheme {
 
   constructor (Config) {
-    const config = Config.get('services.ally.mixer')
+    const config = Config.get('services.ally.patreon')
 
-    utils.validateDriverConfig('mixer', config, ['clientId', 'clientSecret', 'redirectUri'])
+    utils.validateDriverConfig('patreon', config, ['clientId', 'clientSecret', 'redirectUri'])
 
     super(config.clientId, config.clientSecret, config.headers)
 
@@ -61,7 +61,7 @@ class Mixer extends OAuth2Scheme {
    * @return {String}
    */
   get baseUrl () {
-    return 'https://mixer.com'
+    return 'https://www.patreon.com/'
   }
 
   /**
@@ -71,7 +71,7 @@ class Mixer extends OAuth2Scheme {
    * @return {String} [description]
    */
   get authorizeUrl () {
-    return 'oauth/authorize'
+    return 'oauth2/authorize'
   }
 
   /**
@@ -81,16 +81,16 @@ class Mixer extends OAuth2Scheme {
    * @return {String}
    */
   get accessTokenUrl () {
-    return `api/v1/oauth/token`
+    return 'api/oauth2/token'
   }
 
   /**
-   * API url to be used for getting VKontakte user's profile
+   * API url to be used for getting Patreon user's profile
    *
    * @return {String}
    */
   get apiUrl () {
-    return 'https://mixer.com/api/v1'
+    return 'https://www.patreon.com/api/oauth2/api'
   }
 
   /**
@@ -105,7 +105,7 @@ class Mixer extends OAuth2Scheme {
    * @private
    */
   _getInitialScopes (scopes) {
-    return _.size(scopes) ? scopes : ["user:details:self"]
+    return _.size(scopes) ? scopes : ['users pledges-to-me my-campaign']
   }
 
   /**
@@ -120,9 +120,9 @@ class Mixer extends OAuth2Scheme {
    * @private
    */
   async _getUserProfile (accessToken, fields) {
-    const response = await got(`${this.apiUrl}/users/current`, {
+    const response = await got(`${this.apiUrl}/current_user`, {
       headers: {
-        'Authorization': accessToken?'Bearer ' + accessToken : undefined
+        'Authorization': accessToken ? 'Bearer ' + accessToken : undefined
       },
       json: true
     })
@@ -187,20 +187,22 @@ class Mixer extends OAuth2Scheme {
       const errorMessage = this.parseRedirectError(queryParams)
       throw CE.OAuthException.tokenExchangeException(errorMessage, null, errorMessage)
     }
+
     const accessTokenResponse = await this.getAccessToken(code, this._redirectUri, {
-      grant_type: 'authorization_code'
+      'grant_type': 'authorization_code'
     })
-    const userProfile = await this._getUserProfile(accessTokenResponse.accessToken, fields)
+
+    const userProfile = await this._getUserProfile(accessTokenResponse.accessToken)
 
     const user = new AllyUser()
     user
       .setOriginal(userProfile)
       .setFields(
-        userProfile.id,
-        userProfile.username,
-        userProfile.email,
-        null,
-        userProfile.avatarUrl
+        userProfile.data.id,
+        userProfile.data.attributes.vanity,
+        userProfile.data.attributes.email,
+        userProfile.data.attributes.full_name,
+        userProfile.data.attributes.image_url
       )
       .setToken(
         accessTokenResponse.accessToken,
@@ -213,4 +215,4 @@ class Mixer extends OAuth2Scheme {
   }
 }
 
-module.exports = Mixer
+module.exports = Patreon

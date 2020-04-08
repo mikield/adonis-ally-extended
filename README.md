@@ -21,8 +21,8 @@ Any of service that accepts OAuth can be added. If you want an additional servic
 Avaiable services for now are:
 * Twitch.tv
 * Mixer.com
-* Vk.com
-
+* Vk.com (Thanks to [@oddie](https://github.com/oddie))
+* Patreon.com (Thanks to [@mindofjonas](https://github.com/mindofjonas))
 
 ## Install
 
@@ -85,6 +85,21 @@ mixer: {
   clientId: Env.get('MIXER_CLIENT_ID'),
   clientSecret: Env.get('MIXER_CLIENT_SECRET'),
   redirectUri: `${Env.get('APP_URL')}/authenticated/mixer`
+},
+
+/*
+ |--------------------------------------------------------------------------
+ | Patreon Configuration
+ |--------------------------------------------------------------------------
+ |
+ | You can access your application credentials from the Patreon developers
+ | lab. https://www.patreon.com/developers
+ |
+ */
+patreon: {
+  clientId: Env.get('MIXER_CLIENT_ID'),
+  clientSecret: Env.get('MIXER_CLIENT_SECRET'),
+  redirectUri: `${Env.get('APP_URL')}/authenticated/mixer`
 }
 ...
 ```
@@ -110,7 +125,7 @@ Route.get('authenticated/:service', async ({ request, ally }) => {
 
 ## Author
 
-👤 **Vladyslav Gaysyuk <mikield@icloud.com>**
+👤 **Vladyslav Gaysyuk <hello@mikield.rocks>**
 
 * Website: https://mikield.rocks
 * Twitter: [@AdmiralMiki](https://twitter.com/AdmiralMiki)
@@ -131,7 +146,7 @@ Give a ⭐️ if this project helped you!
 
 ## 📝 License
 
-Copyright © 2020 [Vladyslav Gaysyuk <mikield@icloud.com>](https://github.com/mikield).<br />
+Copyright © 2020 [Vladyslav Gaysyuk](https://github.com/mikield).<br />
 This project is [MIT](https://github.com/mikield/adonis-ally-extended/blob/master/LICENSE) licensed.
 
 ***

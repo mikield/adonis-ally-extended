@@ -15,6 +15,7 @@ const Drivers = [
   { name: "vk", driver: require('./Drivers/Vk') },
   { name: "twitch", driver: require('./Drivers/Twitch') },
   { name: "mixer", driver: require('./Drivers/Mixer') },
+  { name: "patreon", driver: require('./Drivers/Patreon') }
 ]
 
 class AllyServiceProvider extends ServiceProvider {

@@ -1,6 +1,6 @@
 {
   "name": "@mikield/adonis-ally-extended",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "Additional Services for AdonisJS Ally package",
   "author": "Vladyslav Gaysyuk <hello@mikield.rocks>",
   "license": "MIT",
